@@ -1,6 +1,44 @@
 <!DOCTYPE html>
 <html>
-<head><title>რეგისტრაცია</title></head>
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>რეგისტრაცია</title>
+<style>
+    /* ზოგადი სტილი (კომპიუტერისთვის) */
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 50px;
+        background-color: #f4f4f4;
+    }
+
+    form {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        width: 300px;
+    }
+
+    /* მობილური "მოდი" (როდესაც ეკრანი 600px-ზე პატარაა) */
+    @media (max-width: 600px) {
+        body {
+            padding: 20px;
+        }
+        form {
+            width: 90%; /* ფორმა დაიკავებს ეკრანის თითქმის მთელ სიგანეს */
+        }
+        input {
+            width: 100%; /* ინპუტები გაიწელება */
+            height: 40px;
+            font-size: 16px; /* რომ ტელეფონზე ადვილი ასაკრეფი იყოს */
+        }
+    }
+</style>
+</head>
 <body>
     <h2>შექმენი ანგარიში</h2>
     <form method="POST">
