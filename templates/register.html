@@ -1,49 +1,87 @@
 <!DOCTYPE html>
-<html>
+<html lang="ka">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>რეგისტრაცია</title>
-<style>
-    /* ზოგადი სტილი (კომპიუტერისთვის) */
-    body {
-        font-family: Arial, sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 50px;
-        background-color: #f4f4f4;
-    }
+    <title>რეგისტრაცია</title>
+    <style>
+        /* ყოველი შემთხვევისთვის ყველა ელემენტს ვასწავლით ზომის სწორად აღქმას */
+        * {
+            box-sizing: border-box;
+        }
 
-    form {
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        width: 300px;
-    }
-
-    /* მობილური "მოდი" (როდესაც ეკრანი 600px-ზე პატარაა) */
-    @media (max-width: 600px) {
         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* ცენტრში დასმა ვერტიკალურადაც */
+            min-height: 100vh;
+            margin: 0;
             padding: 20px;
+            background-color: #f4f4f4;
         }
+
         form {
-            width: 90%; /* ფორმა დაიკავებს ეკრანის თითქმის მთელ სიგანეს */
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 350px; /* კომპიუტერზე მეტი აღარ გაიწელება */
         }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
         input {
-            width: 100%; /* ინპუტები გაიწელება */
-            height: 40px;
-            font-size: 16px; /* რომ ტელეფონზე ადვილი ასაკრეფი იყოს */
+            width: 100%; /* კომპიუტერზეც და ტელეფონზეც სრული სიგანე */
+            padding: 12px;
+            margin: 10px 0 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
         }
-    }
-</style>
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* მობილური შესწორებები */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            form {
+                padding: 20px;
+                box-shadow: none; /* ტელეფონზე ხშირად უფრო სუფთაა ჩრდილის გარეშე */
+            }
+        }
+    </style>
 </head>
 <body>
     <h2>შექმენი ანგარიში</h2>
     <form method="POST">
-        მომხმარებელი: <input type="text" name="username"><br><br>
-        პაროლი: <input type="password" name="password"><br><br>
+        <label>მომხმარებელი:</label>
+        <input type="text" name="username" required>
+        
+        <label>პაროლი:</label>
+        <input type="password" name="password" required>
+        
         <button type="submit">რეგისტრაცია</button>
     </form>
 </body>
