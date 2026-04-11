@@ -1,16 +1,22 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
+from werkzeug.security import generate_password_hash
 
 app = Flask(__name__)
 
-# მონაცემთა ბაზის შექმნა
+# მონაცემთა ბაზის ინიციალიზაცია
 def init_db():
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
-    # ვქმნით ცხრილს: მომხმარებლის სახელი და პაროლი
-    cursor.execute('CREATE TABLE IF NOT EXISTS users (username TEXT, password TEXT)')
-    conn.commit()
-    conn.close()
+    with sqlite3.connect('database.db') as conn:
+        cursor = conn.cursor()
+        # ვქმნით ცხრილს, თუ ის უკვე არ არსებობს
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT NOT NULL UNIQUE,
+                password TEXT NOT NULL
+            )
+        ''')
+        conn.commit()
 
 @app.route('/')
 def home():
@@ -19,22 +25,32 @@ def home():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        username = request.form.get('username')
+        password = request.form.get('password')
 
-        # !!! უსაფრთხოების ხვრელი N1: SQL Injection !!!
-        # მონაცემები გადაეცემა პირდაპირ სტრინგში f-string-ით
-        conn = sqlite3.connect('database.db')
-        cursor = conn.cursor()
-        query = f"INSERT INTO users (username, password) VALUES ('{username}', '{password}')"
-        cursor.execute(query)
+        if not username or not password:
+            return "გთხოვთ შეავსოთ ყველა ველი!"
+
+        # 1. პაროლის დაჰეშვა (უსაფრთხოებისთვის)
+        hashed_password = generate_password_hash(password)
+
+        try:
+            # 2. უსაფრთხო ჩაწერა ბაზაში (SQL Injection-ის პრევენცია)
+            with sqlite3.connect('database.db') as conn:
+                cursor = conn.cursor()
+                # ვიყენებთ ? სიმბოლოებს f-string-ის ნაცვლად
+                cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", 
+                               (username, hashed_password))
+                conn.commit()
+            return "რეგისტრაცია წარმატებით დასრულდა!"
         
-        conn.commit()
-        conn.close()
-        return "რეგისტრაცია წარმატებულია! ახლა შენი მონაცემები 'ღიად' დევს ბაზაში."
+        except sqlite3.IntegrityError:
+            return "ეს მომხმარებლის სახელი უკვე დაკავებულია."
+        except Exception as e:
+            return f"მოხდა გაუთვალისწინებელი შეცდომა: {e}"
     
     return render_template('register.html')
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True, port=5000)
+    app.run(debug=True)
